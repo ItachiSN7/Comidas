@@ -7,6 +7,10 @@ on:
     branches: [ main, master ]
   workflow_dispatch:
 
+env:
+  SUPABASE_URL: ${{ secrets.SUPABASE_URL != '' && secrets.SUPABASE_URL || 'https://ojbsbailordibjlekoyk.supabase.co' }}
+  SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY != '' && secrets.SUPABASE_ANON_KEY || 'sb_publishable_vsc2aghYaaP5o73qG-Js6g_ywZYR56a' }}
+
 jobs:
   build-apk:
     name: Build Android APK
@@ -37,14 +41,14 @@ jobs:
       - name: Build APK (Debug)
         run: |
           flutter build apk --debug \
-            --dart-define=SUPABASE_URL=${{ secrets.SUPABASE_URL || 'https://ojbsbailordibjlekoyk.supabase.co' }} \
-            --dart-define=SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY || 'sb_publishable_vsc2aghYaaP5o73qG-Js6g_ywZYR56a' }}
+            --dart-define=SUPABASE_URL=$SUPABASE_URL \
+            --dart-define=SUPABASE_ANON_KEY=$SUPABASE_ANON_KEY
 
       - name: Build APK (Release)
         run: |
           flutter build apk --release \
-            --dart-define=SUPABASE_URL=${{ secrets.SUPABASE_URL || 'https://ojbsbailordibjlekoyk.supabase.co' }} \
-            --dart-define=SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY || 'sb_publishable_vsc2aghYaaP5o73qG-Js6g_ywZYR56a' }}
+            --dart-define=SUPABASE_URL=$SUPABASE_URL \
+            --dart-define=SUPABASE_ANON_KEY=$SUPABASE_ANON_KEY
 
       - name: Upload Debug APK
         uses: actions/upload-artifact@v4
@@ -59,15 +63,3 @@ jobs:
           name: comidas-release-apk
           path: build/app/outputs/flutter-apk/app-release.apk
           retention-days: 30
-
-      - name: Comment APK link on PR
-        if: github.event_name == 'pull_request'
-        uses: actions/github-script@v7
-        with:
-          script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: '✅ **Android APK generado correctamente.** Descárgalo desde el tab *Actions* → este workflow → *Artifacts*.'
-            })
