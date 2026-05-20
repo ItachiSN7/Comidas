@@ -1,9 +1,11 @@
 import 'package:flutter/foundation.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
 import '../models/workout.dart';
 import '../data/mock_exercises.dart';
 
 const _uuid = Uuid();
+final _supabase = Supabase.instance.client;
 
 class WorkoutProvider extends ChangeNotifier {
   final List<Workout> _workouts = [];
@@ -93,7 +95,7 @@ class WorkoutProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void finishWorkout(int durationMinutes) {
+  Future<void> finishWorkout(int durationMinutes) async {
     if (_activeWorkout == null) return;
     final completed = _activeWorkout!.copyWith(
       isCompleted: true,
@@ -103,6 +105,7 @@ class WorkoutProvider extends ChangeNotifier {
     _activeWorkout = null;
     _generateProgressionSuggestions();
     notifyListeners();
+    await _syncWorkout(completed);
   }
 
   void discardWorkout() {
@@ -173,6 +176,47 @@ class WorkoutProvider extends ChangeNotifier {
   }
 
   List<Exercise> get allExercises => mockExercises;
+
+  Future<void> _syncWorkout(Workout workout) async {
+    final userId = _supabase.auth.currentUser?.id;
+    if (userId == null) return;
+    try {
+      final wRow = await _supabase.from('workouts').insert({
+        'user_id': userId,
+        'name': workout.name,
+        'date': workout.date.toIso8601String(),
+        'duration_minutes': workout.durationMinutes,
+        'is_completed': workout.isCompleted,
+        'notes': workout.notes,
+      }).select('id').single();
+
+      final workoutId = wRow['id'] as String;
+      for (int i = 0; i < workout.exercises.length; i++) {
+        final ex = workout.exercises[i];
+        final exRow = await _supabase.from('workout_exercises').insert({
+          'workout_id': workoutId,
+          'exercise_id': ex.exercise.id,
+          'exercise_order': i,
+          'notes': ex.notes,
+        }).select('id').single();
+
+        final exId = exRow['id'] as String;
+        for (int j = 0; j < ex.sets.length; j++) {
+          final s = ex.sets[j];
+          await _supabase.from('workout_sets').insert({
+            'workout_exercise_id': exId,
+            'set_number': j + 1,
+            'reps': s.reps,
+            'weight_kg': s.weightKg,
+            'is_completed': s.isCompleted,
+            'rpe': s.rpe,
+          });
+        }
+      }
+    } catch (_) {
+      // Offline — saved locally only
+    }
+  }
 
   void loadDemoData() {
     if (_workouts.isNotEmpty) return;

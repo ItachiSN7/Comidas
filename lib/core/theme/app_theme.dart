@@ -17,6 +17,14 @@ class AppColors {
   static const Color accentOrange = Color(0xFFFF9F43);
   static const Color accentPurple = Color(0xFFA55EEA);
 
+  // Surfaces
+  static const Color surfaceElevated = Color(0xFF252535);
+
+  // Semantic
+  static const Color error = Color(0xFFFF6B6B);
+  static const Color success = Color(0xFF00FF87);
+  static const Color warning = Color(0xFFFF9F43);
+
   // Text
   static const Color textPrimary = Color(0xFFFFFFFF);
   static const Color textSecondary = Color(0xFFB0B0C8);

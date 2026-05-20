@@ -61,6 +61,27 @@ class Meal {
     }
   }
 
+  factory Meal.fromMap(Map<String, dynamic> m) {
+    List<String> _list(dynamic v) =>
+        v == null ? [] : List<String>.from(v as List);
+    return Meal(
+      id: m['id'] ?? '',
+      name: m['name'] ?? '',
+      description: m['description'] ?? '',
+      imageUrl: m['image_url'] ?? '',
+      calories: (m['calories'] ?? 0).toDouble(),
+      protein: (m['protein'] ?? 0).toDouble(),
+      carbs: (m['carbs'] ?? 0).toDouble(),
+      fat: (m['fat'] ?? 0).toDouble(),
+      prepTimeMinutes: m['prep_time_minutes'] ?? 0,
+      difficulty: m['difficulty'] ?? 'easy',
+      mealType: m['meal_type'] ?? 'snack',
+      ingredients: _list(m['ingredients']),
+      steps: _list(m['steps']),
+      tags: _list(m['tags']),
+    );
+  }
+
   Meal copyWith({bool? isLogged}) {
     return Meal(
       id: id,

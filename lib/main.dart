@@ -3,10 +3,11 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'core/theme/app_theme.dart';
-import 'providers/user_provider.dart';
+import 'providers/user_provider.dart' show UserProvider, AppAuthState;
 import 'providers/nutrition_provider.dart';
 import 'providers/workout_provider.dart';
 import 'providers/shopping_provider.dart';
+import 'screens/auth/auth_screen.dart';
 import 'screens/onboarding/onboarding_screen.dart';
 import 'screens/main_nav_screen.dart';
 
@@ -67,13 +68,17 @@ class _AppRouter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<UserProvider>(
-      builder: (context, userProvider, _) {
-        if (userProvider.isLoading) {
-          return const _SplashScreen();
+      builder: (context, user, _) {
+        if (user.isLoading) return const _SplashScreen();
+
+        // Not yet decided (unauthenticated) → show auth
+        if (user.authState == AppAuthState.unauthenticated) {
+          return const AuthScreen();
         }
-        if (!userProvider.isOnboarded) {
-          return const OnboardingScreen();
-        }
+
+        // Authenticated or offline but no profile yet → onboarding
+        if (!user.isOnboarded) return const OnboardingScreen();
+
         return const MainNavScreen();
       },
     );
