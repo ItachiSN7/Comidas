@@ -34,19 +34,17 @@ jobs:
       - name: Analyze code
         run: flutter analyze --no-fatal-infos
 
-      - name: Build APK (Debug — no signing needed)
+      - name: Build APK (Debug)
         run: |
-          flutter build apk \
-            --debug \
-            --dart-define=SUPABASE_URL=${{ secrets.SUPABASE_URL }} \
-            --dart-define=SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}
+          flutter build apk --debug \
+            --dart-define=SUPABASE_URL=${{ secrets.SUPABASE_URL || 'https://ojbsbailordibjlekoyk.supabase.co' }} \
+            --dart-define=SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY || 'sb_publishable_vsc2aghYaaP5o73qG-Js6g_ywZYR56a' }}
 
       - name: Build APK (Release)
         run: |
-          flutter build apk \
-            --release \
-            --dart-define=SUPABASE_URL=${{ secrets.SUPABASE_URL }} \
-            --dart-define=SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}
+          flutter build apk --release \
+            --dart-define=SUPABASE_URL=${{ secrets.SUPABASE_URL || 'https://ojbsbailordibjlekoyk.supabase.co' }} \
+            --dart-define=SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY || 'sb_publishable_vsc2aghYaaP5o73qG-Js6g_ywZYR56a' }}
 
       - name: Upload Debug APK
         uses: actions/upload-artifact@v4

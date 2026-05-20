@@ -25,15 +25,14 @@ void main() async {
     statusBarIconBrightness: Brightness.light,
   ));
 
-  // Initialize Supabase (replace with your actual keys)
   await Supabase.initialize(
     url: const String.fromEnvironment(
       'SUPABASE_URL',
-      defaultValue: 'https://your-project.supabase.co',
+      defaultValue: 'https://ojbsbailordibjlekoyk.supabase.co',
     ),
     anonKey: const String.fromEnvironment(
       'SUPABASE_ANON_KEY',
-      defaultValue: 'your-anon-key',
+      defaultValue: 'sb_publishable_vsc2aghYaaP5o73qG-Js6g_ywZYR56a',
     ),
   );
 
