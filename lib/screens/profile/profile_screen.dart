@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../core/theme/app_theme.dart';
 import '../../providers/user_provider.dart';
+import '../../providers/nutrition_provider.dart';
 import '../../widgets/glass_card.dart';
 import '../../widgets/macro_progress_bar.dart';
 
@@ -77,9 +78,11 @@ class ProfileScreen extends StatelessWidget {
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
-                                    profile.goalLabel,
+                                    userProvider.isAuthenticated
+                                        ? (userProvider.currentUser?.email ?? profile.goalLabel)
+                                        : profile.goalLabel,
                                     style: TextStyle(
-                                      fontSize: 14,
+                                      fontSize: 13,
                                       color: Colors.black.withOpacity(0.7),
                                       fontWeight: FontWeight.w500,
                                     ),
@@ -222,20 +225,28 @@ class ProfileScreen extends StatelessWidget {
                             ),
                             _SettingsRow(
                               icon: Icons.sync_outlined,
-                              label: 'Sincronizar con Supabase',
+                              label: 'Sincronizar datos hoy',
                               color: AppColors.accentOrange,
-                              onTap: () {},
+                              onTap: () => _syncToday(context),
                             ),
                             _SettingsRow(
                               icon: Icons.info_outline,
                               label: 'Acerca de Comidas',
                               color: AppColors.textTertiary,
-                              onTap: () {},
+                              onTap: () => _showAbout(context),
                             ),
+                            if (userProvider.isAuthenticated)
+                              _SettingsRow(
+                                icon: Icons.logout,
+                                label: 'Cerrar Sesión',
+                                color: AppColors.accentOrange,
+                                onTap: () => _confirmSignOut(context, userProvider),
+                                isDestructive: false,
+                              ),
                             _SettingsRow(
-                              icon: Icons.logout,
+                              icon: Icons.delete_forever_outlined,
                               label: 'Reiniciar Perfil',
-                              color: AppColors.caloriesColor,
+                              color: AppColors.error,
                               onTap: () => _confirmReset(context, userProvider),
                               isDestructive: true,
                             ),
@@ -274,6 +285,69 @@ class ProfileScreen extends StatelessWidget {
     else if (bmi < 30) category = 'Sobrepeso';
     else category = 'Obesidad';
     return '${bmi.toStringAsFixed(1)} ($category)';
+  }
+
+  Future<void> _syncToday(BuildContext context) async {
+    final nutrition = context.read<NutritionProvider>();
+    await nutrition.loadFromSupabase(DateTime.now());
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Datos sincronizados ✓'),
+          backgroundColor: AppColors.primary,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    }
+  }
+
+  void _showAbout(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        backgroundColor: AppColors.surface,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: const Text('Comidas', style: TextStyle(color: AppColors.textPrimary, fontWeight: FontWeight.w800)),
+        content: const Text(
+          'v1.0.0 — Fitness & Nutrición Premium\n\nDesarrollado con Flutter + Supabase.',
+          style: TextStyle(color: AppColors.textSecondary, height: 1.5),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('OK', style: TextStyle(color: AppColors.primary)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _confirmSignOut(BuildContext context, UserProvider provider) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        backgroundColor: AppColors.surface,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: const Text('Cerrar Sesión', style: TextStyle(color: AppColors.textPrimary)),
+        content: const Text(
+          'Tus datos quedan guardados en la nube. Puedes volver a iniciar sesión cuando quieras.',
+          style: TextStyle(color: AppColors.textSecondary, height: 1.5),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancelar', style: TextStyle(color: AppColors.primary)),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              provider.signOut();
+            },
+            child: const Text('Cerrar Sesión', style: TextStyle(color: AppColors.accentOrange)),
+          ),
+        ],
+      ),
+    );
   }
 
   void _confirmReset(BuildContext context, UserProvider provider) {

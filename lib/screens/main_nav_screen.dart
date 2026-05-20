@@ -2,7 +2,10 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../core/theme/app_theme.dart';
+import '../providers/user_provider.dart';
+import '../providers/nutrition_provider.dart';
 import '../providers/workout_provider.dart';
+import '../providers/shopping_provider.dart';
 import 'home/home_screen.dart';
 import 'recipes/recipes_screen.dart';
 import 'workout/workout_screen.dart';
@@ -38,9 +41,14 @@ class _MainNavScreenState extends State<MainNavScreen> {
   @override
   void initState() {
     super.initState();
-    // Load demo workout data
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<WorkoutProvider>().loadDemoData();
+      final userProvider = context.read<UserProvider>();
+      if (userProvider.isAuthenticated) {
+        context.read<NutritionProvider>().loadFromSupabase(DateTime.now());
+        context.read<ShoppingProvider>().loadLatestFromSupabase();
+      } else {
+        context.read<WorkoutProvider>().loadDemoData();
+      }
     });
   }
 
