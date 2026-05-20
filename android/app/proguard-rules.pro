@@ -1,0 +1,7 @@
+-keep class io.flutter.** { *; }
+-keep class io.flutter.plugins.** { *; }
+-keep class com.google.** { *; }
+-dontwarn io.flutter.embedding.**
+-keepattributes *Annotation*
+-keepattributes Signature
+-keepattributes Exceptions
