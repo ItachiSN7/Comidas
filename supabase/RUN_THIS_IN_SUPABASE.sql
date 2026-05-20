@@ -144,6 +144,33 @@ ALTER TABLE workout_sets      ENABLE ROW LEVEL SECURITY;
 ALTER TABLE shopping_lists    ENABLE ROW LEVEL SECURITY;
 ALTER TABLE shopping_items    ENABLE ROW LEVEL SECURITY;
 
+-- Eliminar políticas previas (idempotente)
+DROP POLICY IF EXISTS "profiles_select" ON user_profiles;
+DROP POLICY IF EXISTS "profiles_insert" ON user_profiles;
+DROP POLICY IF EXISTS "profiles_update" ON user_profiles;
+DROP POLICY IF EXISTS "profiles_delete" ON user_profiles;
+DROP POLICY IF EXISTS "profile_select"  ON user_profiles;
+DROP POLICY IF EXISTS "profile_insert"  ON user_profiles;
+DROP POLICY IF EXISTS "profile_update"  ON user_profiles;
+DROP POLICY IF EXISTS "profile_delete"  ON user_profiles;
+
+DROP POLICY IF EXISTS "meals_read"   ON meals;
+DROP POLICY IF EXISTS "meals_write"  ON meals;
+DROP POLICY IF EXISTS "meals_update" ON meals;
+DROP POLICY IF EXISTS "meals_delete" ON meals;
+DROP POLICY IF EXISTS "meals_insert" ON meals;
+
+DROP POLICY IF EXISTS "logs_all"     ON daily_logs;
+
+DROP POLICY IF EXISTS "workouts_all" ON workouts;
+
+DROP POLICY IF EXISTS "we_all"       ON workout_exercises;
+
+DROP POLICY IF EXISTS "ws_all"       ON workout_sets;
+
+DROP POLICY IF EXISTS "sl_all"       ON shopping_lists;
+DROP POLICY IF EXISTS "si_all"       ON shopping_items;
+
 -- user_profiles
 CREATE POLICY "profiles_select" ON user_profiles FOR SELECT USING (auth.uid() = user_id);
 CREATE POLICY "profiles_insert" ON user_profiles FOR INSERT WITH CHECK (auth.uid() = user_id);
@@ -282,6 +309,7 @@ CREATE OR REPLACE FUNCTION set_updated_at()
 RETURNS TRIGGER LANGUAGE plpgsql AS $$
 BEGIN NEW.updated_at = NOW(); RETURN NEW; END; $$;
 
+DROP TRIGGER IF EXISTS profiles_updated_at ON user_profiles;
 CREATE TRIGGER profiles_updated_at
   BEFORE UPDATE ON user_profiles
   FOR EACH ROW EXECUTE FUNCTION set_updated_at();
