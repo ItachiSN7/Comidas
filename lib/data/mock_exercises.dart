@@ -1,9 +1,31 @@
 import '../models/workout.dart';
 
+// IDs fijos que coinciden exactamente con la base de datos de Supabase
+const _e01 = '00000000-0000-0000-0000-000000000001';
+const _e02 = '00000000-0000-0000-0000-000000000002';
+const _e03 = '00000000-0000-0000-0000-000000000003';
+const _e04 = '00000000-0000-0000-0000-000000000004';
+const _e05 = '00000000-0000-0000-0000-000000000005';
+const _e06 = '00000000-0000-0000-0000-000000000006';
+const _e07 = '00000000-0000-0000-0000-000000000007';
+const _e08 = '00000000-0000-0000-0000-000000000008';
+const _e09 = '00000000-0000-0000-0000-000000000009';
+const _e10 = '00000000-0000-0000-0000-000000000010';
+const _e11 = '00000000-0000-0000-0000-000000000011';
+const _e12 = '00000000-0000-0000-0000-000000000012';
+const _e13 = '00000000-0000-0000-0000-000000000013';
+const _e14 = '00000000-0000-0000-0000-000000000014';
+const _e15 = '00000000-0000-0000-0000-000000000015';
+const _e16 = '00000000-0000-0000-0000-000000000016';
+const _e17 = '00000000-0000-0000-0000-000000000017';
+const _e18 = '00000000-0000-0000-0000-000000000018';
+const _e19 = '00000000-0000-0000-0000-000000000019';
+const _e20 = '00000000-0000-0000-0000-000000000020';
+
 final List<Exercise> mockExercises = [
   // CHEST
   Exercise(
-    id: 'ex1',
+    id: _e01,
     name: 'Press de Banca',
     muscleGroup: 'chest',
     equipment: 'Barra',
@@ -12,7 +34,7 @@ final List<Exercise> mockExercises = [
     difficulty: 'medium',
   ),
   Exercise(
-    id: 'ex2',
+    id: _e02,
     name: 'Press Inclinado con Mancuernas',
     muscleGroup: 'chest',
     equipment: 'Mancuernas',
@@ -21,7 +43,7 @@ final List<Exercise> mockExercises = [
     difficulty: 'medium',
   ),
   Exercise(
-    id: 'ex3',
+    id: _e03,
     name: 'Aperturas con Mancuernas',
     muscleGroup: 'chest',
     equipment: 'Mancuernas',
@@ -32,7 +54,7 @@ final List<Exercise> mockExercises = [
 
   // BACK
   Exercise(
-    id: 'ex4',
+    id: _e04,
     name: 'Dominadas',
     muscleGroup: 'back',
     equipment: 'Barra Dominadas',
@@ -41,7 +63,7 @@ final List<Exercise> mockExercises = [
     difficulty: 'hard',
   ),
   Exercise(
-    id: 'ex5',
+    id: _e05,
     name: 'Remo con Barra',
     muscleGroup: 'back',
     equipment: 'Barra',
@@ -50,7 +72,7 @@ final List<Exercise> mockExercises = [
     difficulty: 'medium',
   ),
   Exercise(
-    id: 'ex6',
+    id: _e06,
     name: 'Jalón al Pecho',
     muscleGroup: 'back',
     equipment: 'Polea',
@@ -61,7 +83,7 @@ final List<Exercise> mockExercises = [
 
   // SHOULDERS
   Exercise(
-    id: 'ex7',
+    id: _e07,
     name: 'Press Militar',
     muscleGroup: 'shoulders',
     equipment: 'Barra',
@@ -70,7 +92,7 @@ final List<Exercise> mockExercises = [
     difficulty: 'medium',
   ),
   Exercise(
-    id: 'ex8',
+    id: _e08,
     name: 'Elevaciones Laterales',
     muscleGroup: 'shoulders',
     equipment: 'Mancuernas',
@@ -81,7 +103,7 @@ final List<Exercise> mockExercises = [
 
   // LEGS
   Exercise(
-    id: 'ex9',
+    id: _e09,
     name: 'Sentadilla con Barra',
     muscleGroup: 'legs',
     equipment: 'Barra',
@@ -90,7 +112,7 @@ final List<Exercise> mockExercises = [
     difficulty: 'hard',
   ),
   Exercise(
-    id: 'ex10',
+    id: _e10,
     name: 'Peso Muerto',
     muscleGroup: 'back',
     equipment: 'Barra',
@@ -99,7 +121,7 @@ final List<Exercise> mockExercises = [
     difficulty: 'hard',
   ),
   Exercise(
-    id: 'ex11',
+    id: _e11,
     name: 'Prensa de Pierna',
     muscleGroup: 'legs',
     equipment: 'Máquina',
@@ -108,7 +130,7 @@ final List<Exercise> mockExercises = [
     difficulty: 'easy',
   ),
   Exercise(
-    id: 'ex12',
+    id: _e12,
     name: 'Extensión de Cuádriceps',
     muscleGroup: 'legs',
     equipment: 'Máquina',
@@ -117,7 +139,7 @@ final List<Exercise> mockExercises = [
     difficulty: 'easy',
   ),
   Exercise(
-    id: 'ex13',
+    id: _e13,
     name: 'Curl Femoral',
     muscleGroup: 'legs',
     equipment: 'Máquina',
@@ -126,7 +148,7 @@ final List<Exercise> mockExercises = [
     difficulty: 'easy',
   ),
   Exercise(
-    id: 'ex14',
+    id: _e14,
     name: 'Hip Thrust',
     muscleGroup: 'glutes',
     equipment: 'Barra',
@@ -137,7 +159,7 @@ final List<Exercise> mockExercises = [
 
   // BICEPS
   Exercise(
-    id: 'ex15',
+    id: _e15,
     name: 'Curl de Bíceps',
     muscleGroup: 'biceps',
     equipment: 'Mancuernas',
@@ -146,7 +168,7 @@ final List<Exercise> mockExercises = [
     difficulty: 'easy',
   ),
   Exercise(
-    id: 'ex16',
+    id: _e16,
     name: 'Curl Martillo',
     muscleGroup: 'biceps',
     equipment: 'Mancuernas',
@@ -157,7 +179,7 @@ final List<Exercise> mockExercises = [
 
   // TRICEPS
   Exercise(
-    id: 'ex17',
+    id: _e17,
     name: 'Press Francés',
     muscleGroup: 'triceps',
     equipment: 'Barra',
@@ -166,7 +188,7 @@ final List<Exercise> mockExercises = [
     difficulty: 'medium',
   ),
   Exercise(
-    id: 'ex18',
+    id: _e18,
     name: 'Fondos en Paralelas',
     muscleGroup: 'triceps',
     equipment: 'Paralelas',
@@ -177,7 +199,7 @@ final List<Exercise> mockExercises = [
 
   // CORE
   Exercise(
-    id: 'ex19',
+    id: _e19,
     name: 'Plancha',
     muscleGroup: 'core',
     equipment: 'Sin equipamiento',
@@ -186,7 +208,7 @@ final List<Exercise> mockExercises = [
     difficulty: 'easy',
   ),
   Exercise(
-    id: 'ex20',
+    id: _e20,
     name: 'Rueda Abdominal',
     muscleGroup: 'core',
     equipment: 'Rueda Ab',
